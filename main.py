@@ -14,11 +14,14 @@ class Game():
         return f'{self.name}, {self.owner}'
 
     def save(self):
+        GAMES.append(self)
+        """
         GAMES.append({
                       'id': self.id,
                       'name': self.name,
                       'owner': self.owner,
         })
+        """
 
 #Adventure definition
 class Adventure():
@@ -32,12 +35,15 @@ class Adventure():
         return f'{self.name}, {self.gm} - {self.diary}'
 
     def save(self):
+        ADVENTURES.append(self)
+        """
         ADVENTURES.append({
                           'id': self.id,
                           'name': self.name,
                           'gm': self.gm,
                           'diary': self.diary
         })
+        """
 
 #User definition
 class User():
@@ -51,12 +57,14 @@ class User():
         return f'{self.name}'
 
     def save(self):
+        USERS.append(self)
+        """
         USERS.append({
                       'id': self.id,
                       'name': self.name,
                       'password': self.password,
         })
-
+        """
 
 #Race definition
 class Race():
@@ -64,18 +72,20 @@ class Race():
         self.id = (len(RACES) + 1)
         self.name = name
         self.puntos = puntos
-        self
+
 
     def __str__(self):
         return f'{self.name}, {self.puntos}'
 
     def save(self):
+        RACES.append(self)
+        """
         RACES.append({
                       'id': self.id,
                       'name': self.name,
                       'puntos': self.puntos,
         })
-
+        """
 
 #Classes definition
 class Classes():
@@ -88,10 +98,14 @@ class Classes():
         return f'{self.name}'
 
     def save(self):
+        CLASSES.append(self)
+        """
         CLASSES.append({
                         'id': self.id,
                         'name': self.name,
         })
+        """
+
 
 
 #Character definition
@@ -106,19 +120,29 @@ class Character():
         self.puntos = puntos
 
     def __str__(self):
-        race_name = RACES.get('id', self.race_id)
-        class_name = CLASSES.get('id', self.class_id)
-        user_name = USERS.get('id', self.user_id)
-        return f'Usuario: {user_name} Personaje: {self.name}, {race_name} {class_name} level: {self.lvl}'
+        race_name = class_name = user_name = ''
+        for race in RACES:
+            if race.id == self.race_id:
+                race_name = race.name
+        for clase in CLASSES:
+            if clase.id == self.class_id:
+                class_name = clase.name
+        for user in USERS:
+            if user.id == self.user_id:
+                user_name = user.name
+        
+        return f'Personaje: {self.name}, {race_name} {class_name} level: {self.lvl} puntos: {self.puntos}Usuario: {user_name}'
 
     def save(self):
         #Calculating Point Modifiers
         #Race Point Modifiers
-        race_puntos = RACES[self.race_id - 1]['puntos']
+        race_puntos = RACES[self.race_id - 1].puntos
 
         for key in race_puntos:
             self.puntos[key] += race_puntos[key]
 
+        CHARACTERS.append(self)
+        """
         CHARACTERS.append({
                            'id': self.id,
                            'user_id': self.user_id,
@@ -128,7 +152,7 @@ class Character():
                            'lvl': self.lvl,
                            'puntos': self.puntos,
         })
-
+        """
 
 """
 
@@ -148,12 +172,14 @@ class user_game():
         return f'{self.game_id}, {self.user_id} - {self.user_role}'
 
     def save(self):
+        R_USER_GAME.append(self)
+        """
         R_USER_GAME.append({
                             'game_id': self.game_id,
                             'user_id': self.user_id,
                             'user_role': self.user_role,
         })
-
+        """
 
 
 
@@ -166,11 +192,13 @@ class adventure_game():
         return f'{self.adventure_id}, {self.game_id}'
 
     def save(self):
+        R_ADVENTURE_GAME.append(self)
+        """
         R_ADVENTURE_GAME.append({
                                  'adventure_id': self.adventure_id,
                                  'game_id': self.game_id,
         })
-
+        """
 
 
 
@@ -183,11 +211,13 @@ class character_adventure():
         return f'{self.character_id}, {self.adventure_id}'
 
     def save(self):
+        R_CHARACTER_ADVENTURE.append(self)
+        """
         R_CHARACTER_ADVENTURE.append({
                                       'character_id': self.character_id,
                                       'adventure_id': self.adventure_id,
         })
-
+        """
 
 
 
@@ -200,10 +230,13 @@ class user_character():
         return f'{self.user_id}, {self.character_id}'
 
     def save(self):
+        R_USER_CHARACTER.append(self)
+        """
         R_USER_CHARACTER.append({
                                  'user_id': self.user_id,
                                  'character_id': self.character_id,
         })
+        """
 """
 DATABASE
 
@@ -218,6 +251,8 @@ USERS = []
 CLASSES = []
 RACES = []
 CHARACTERS = []
+
+
 
 #Relations
 R_USER_CHARACTER = []
@@ -285,30 +320,29 @@ c_a.save()
 c_a = character_adventure(2,2)
 c_a.save()
 
+for game in GAMES:
+    print(game)
 
-"""
-print('########################')
-print('Datos')
-print(len(RACES))
-print(f'RACES\n {str(RACES)} \n')
-print(len(CLASSES))
-print(f'CLASSES\n {str(CLASSES)} \n')
-print(len(USERS))
-print(f'USERS\n {str(USERS)} \n')
-print(len(CHARACTERS))
-print(f'CHARACTERS\n {str(CHARACTERS)} \n')
-print(len(GAMES))
-print(f'GAMES\n {str(GAMES)} \n')
-print(len(ADVENTURES))
-print(f'ADVENTURES\n {str(ADVENTURES)} \n')
-input()
-"""
+for adventure in ADVENTURES:
+    print(adventure)
+
+for user in USERS:
+    print(user)
+
+for clase in CLASSES:
+    print(clase)
+
+for race in RACES:
+    print(race)
+
+for character in CHARACTERS:
+    print(character)
+
 
 def show_characters(user_id):
-    print('Entered show_characters')
     result = []
     for character in CHARACTERS:
-        if character['user_id'] == user_id:
+        if character.user_id == user_id:
             result.append(character)
     
     return result
@@ -316,9 +350,9 @@ def show_characters(user_id):
 def show_games(user_id):
     result = []
     for relation in R_USER_GAME:
-        if relation['user_id'] == user_id:
+        if relation.user_id == user_id:
             for game in GAMES:
-                if game['id'] == relation['game_id']:
+                if game.id == relation.game_id:
                     result.append(game)
                     
     return result
@@ -327,11 +361,11 @@ def show_adventures(user_id):
     result = []
 
     for game_relation in R_USER_GAME:
-        if game_relation['user_id'] == user_id:
+        if game_relation.user_id == user_id:
             for adv_relation in R_ADVENTURE_GAME:
-                if adv_relation['game_id'] == game_relation['game_id']:
+                if adv_relation.game_id == game_relation.game_id:
                     for adventure in ADVENTURES:
-                        if adventure['id'] == adv_relation['adventure_id']:
+                        if adventure.id == adv_relation.adventure_id:
                             result.append(adventure)
 
     return result
@@ -342,38 +376,40 @@ def menu():
     CURRENT_USER = {} #{id,name,}
     sel = ''
     print('login')
-    user = input('user name\n>>>')
+    user_login = input('user name\n>>>')
 
     while not CURRENT_USER:
-        for u in USERS:
-            if user == u['name']: #user['name'] == user:
-                u_id = u['id']
-                u_name = u['name']
+        for user in USERS:
+            if user_login == user.name: #user['name'] == user:
                 password = input('password\n>>>')
-                if password == u['password']: #user['password'] == password:
-                    CURRENT_USER = {'id':u_id, 'name':u_name}
+                if password == user.password: #user['password'] == password:
+                    CURRENT_USER = user
+                else:
+                    print('usuario o contraseña incorrecta...')
+
+            
     
     while sel != 'exit':
-        print(f'Logged in as {CURRENT_USER["name"]}')
+        print(f'Logged in as {CURRENT_USER}')
         sel = input('1. Characters\n2. Games\n3. Adventures\n (exit to log out)\n>>>')
         
         if sel == '1':
             print(f'Your characters')
-            result = show_characters(CURRENT_USER['id'])
+            result = show_characters(CURRENT_USER.id)
             for r in result:
-                print(str(r))
+                print(r)
             input()
 
         elif sel == '2':
             print(f'Your Games')
-            result = show_games(CURRENT_USER['id'])
+            result = show_games(CURRENT_USER.id)
             for r in result:
                 print(r)
             input()
 
         elif sel == '3':
             print(f'Your Adventures')
-            result = show_adventures(CURRENT_USER['id'])
+            result = show_adventures(CURRENT_USER.id)
             for r in result:
                 print(r)
             input()
