@@ -7,6 +7,12 @@ def show_characters(usuario_id):
             result.append(character)
             for item in show_inventario(character.id):
                 result.append(item)
+            print('SQL')
+            print('Creacion de tabla\n')
+            print(f'{character.create_table_sql()}\n')
+            print('Creacion de objeto\n')
+            print(f'{character.create_self_sql()}\n')
+            input()
     
     return result
 
